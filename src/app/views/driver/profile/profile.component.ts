@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { UserAccountInfoService } from '../../../shared/services/api.service';
+import { UserAccountInfoService, ReservationService } from '../../../shared/services/api.service';
 import { ElectricVehicle } from '../../../shared/models/electric-vehicle';
 import { UserInfo } from '../../../shared/models/user-account-data';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-profile',
@@ -14,12 +15,12 @@ export class ProfileComponent implements OnInit {
   myEvs: ElectricVehicle[];
   myReservations: any[];
 
-  // TODO get pk from localStorage User
   userPk = JSON.parse(localStorage.getItem('userData'))['id'];
 
   constructor(
     private accountService: UserAccountInfoService,
-    // private toastr: ToastrService
+    private reservationService: ReservationService,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit() {
@@ -36,4 +37,13 @@ export class ProfileComponent implements OnInit {
       });
   }
 
+  cancelReservation(eventEvNk: string): void {
+    this.reservationService.cancelReservation(eventEvNk)
+      .subscribe(() => {
+        this.toastr.success('Reservation canceled', 'Success!', {progressBar: true});
+      }, () => {
+        this.toastr.error('Error occured during cancelation', 'Error', {progressBar: true});
+      }
+    );
+  }
 }

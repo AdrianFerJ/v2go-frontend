@@ -118,4 +118,8 @@ export class ReservationService {
 
     return this.http.post<Reservation>(endPoint, payLoad);
   }
+
+  public cancelReservation(eventEvNk: string): Observable<Reservation> {
+    return this.http.put<Reservation>(`${this.API_URL}reservations/${eventEvNk}/`, {});
+  }
 }
